@@ -1,4 +1,4 @@
-import { FC, useState } from "react";
+import { FC, useState, useTransition } from "react";
 import { Avatar } from "./Avatar";
 
 type Task = {
@@ -39,12 +39,17 @@ const filteringAssignee = (assignee: string) => {
 };
 
 export const Transition: FC = () => {
+  // useTransition トランジション関数と反映されているかのフラグを分割代入
+  const [isPending, startTransition] = useTransition();
   const [selected, setSelected] = useState<string>("");
   const [taskList, setTaskList] = useState<Task[]>(tasks);
 
   const onClickAssignee = (assignee: string) => {
     setSelected(assignee);
-    setTaskList(filteringAssignee(assignee));
+    // startTransition 優先度の高くないstate更新を関数の中に入れる
+    startTransition(() => {
+      setTaskList(filteringAssignee(assignee));
+    });
   };
   return (
     <div>
@@ -69,6 +74,7 @@ export const Transition: FC = () => {
             width: "300px",
             margin: "16px auto",
             backgroundColor: "lavender",
+            opacity: isPending ? 0.6 : 1,
           }}
         >
           <p>タイトル：{task.title}</p>
