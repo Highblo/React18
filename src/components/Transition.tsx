@@ -43,6 +43,7 @@ export const Transition: FC = () => {
   const [isPending, startTransition] = useTransition();
   const [selected, setSelected] = useState<string>("");
   const [taskList, setTaskList] = useState<Task[]>(tasks);
+  const [isShowList, setIsShowList] = useState<boolean>(false);
 
   const onClickAssignee = (assignee: string) => {
     setSelected(assignee);
@@ -67,7 +68,10 @@ export const Transition: FC = () => {
       </div>
       <br />
       <button onClick={() => onClickAssignee("")}>リセット</button>
-      {taskList.map((task) => (
+      <br />
+      <br />
+      <button onClick={() => setIsShowList(!isShowList)}>表示/非表示</button>
+      {isShowList && taskList.map((task) => (
         <div
           key={task.id}
           style={{
